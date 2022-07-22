@@ -2,7 +2,10 @@
 
 > Common definitions and functions for the cleanURI service.
 
-## Include library
+
+## Deployment
+
+### Including the library
 
 The library can be included with [jitpack](https://jitpack.io/) with two additions to the project's POM file. 
 
@@ -27,9 +30,6 @@ Adding the library:
 Replace the `version` tag with the desired release.
 
 Please refer to the [jitpack documentation](https://jitpack.io/) on using alternative build systems.
-
-
-## Deployment
 
 ### Development
 
