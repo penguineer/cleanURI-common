@@ -51,18 +51,18 @@ public class TestExtractionRequest {
 
         final ExtractionRequest.Builder builder = ExtractionRequest.Builder.withURI(EXAMPLE_COM);
 
-        builder.addField(ExtractionRequest.Field.ID);
-        assertEquals(Set.of(ExtractionRequest.Field.ID), builder.instance().getFields());
+        builder.addField(MetaData.Fields.ID);
+        assertEquals(Set.of(MetaData.Fields.ID), builder.instance().getFields());
 
         // fields should be reset after instance()
-        builder.addField(ExtractionRequest.Field.TITLE);
-        assertEquals(Set.of(ExtractionRequest.Field.TITLE), builder.instance().getFields());
+        builder.addField(MetaData.Fields.TITLE);
+        assertEquals(Set.of(MetaData.Fields.TITLE), builder.instance().getFields());
 
         // but both fields can also be set
-        builder.addField(ExtractionRequest.Field.TITLE);
-        builder.addField(ExtractionRequest.Field.ID);
+        builder.addField(MetaData.Fields.TITLE);
+        builder.addField(MetaData.Fields.ID);
         final ExtractionRequest request = builder.instance();
-        assertEquals(Set.of(ExtractionRequest.Field.ID, ExtractionRequest.Field.TITLE),
+        assertEquals(Set.of(MetaData.Fields.ID, MetaData.Fields.TITLE),
                 request.getFields());
     }
 
@@ -91,7 +91,7 @@ public class TestExtractionRequest {
     public void testJson() {
         final ExtractionRequest req1 = ExtractionRequest.Builder
                 .withURI(EXAMPLE_COM)
-                .addField(ExtractionRequest.Field.ID)
+                .addField(MetaData.Fields.ID)
                 .setAgeLimit(2).instance();
 
         ObjectMapper mapper = new ObjectMapper();
@@ -105,7 +105,7 @@ public class TestExtractionRequest {
         );
         assertNotNull(req2);
         assertEquals(EXAMPLE_COM, req2.getURI());
-        assertEquals(Set.of(ExtractionRequest.Field.ID), req2.getFields());
+        assertEquals(Set.of(MetaData.Fields.ID), req2.getFields());
         assertEquals(2, req2.getAgeLimit());
 
         final ExtractionRequest req3 = assertDoesNotThrow(
@@ -125,7 +125,7 @@ public class TestExtractionRequest {
         );
         assertNotNull(req4);
         assertEquals(EXAMPLE_COM, req4.getURI());
-        assertEquals(Set.of(ExtractionRequest.Field.ID, ExtractionRequest.Field.TITLE), req4.getFields());
+        assertEquals(Set.of(MetaData.Fields.ID, MetaData.Fields.TITLE), req4.getFields());
         assertNull(req4.getAgeLimit());
     }
 

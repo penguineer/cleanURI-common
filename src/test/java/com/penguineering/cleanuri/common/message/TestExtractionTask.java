@@ -60,13 +60,13 @@ public class TestExtractionTask {
     public void testMeta() {
         final ExtractionTask task = ExtractionTask.Builder
                 .withRequest(REQUEST)
-                .putMeta("test", MetaData.Builder.withValue("foo").setTimestamp(1).instance())
+                .putMeta(MetaData.Fields.ID, MetaData.Builder.withValue("foo").setTimestamp(1).instance())
                 .instance();
 
         assertNotNull(task);
         assertSame(REQUEST, task.getRequest());
-        assertTrue(task.getMeta().containsKey("test"));
-        assertEquals("foo", task.getMeta().get("test").getValue());
+        assertTrue(task.getMeta().containsKey(MetaData.Fields.ID));
+        assertEquals("foo", task.getMeta().get(MetaData.Fields.ID).getValue());
 
         ObjectMapper mapper = new ObjectMapper();
         String json = assertDoesNotThrow(
@@ -74,7 +74,7 @@ public class TestExtractionTask {
         );
         assertEquals(
                 "{\"request\":{\"uri\":\"https://www.example.com\"}," +
-                        "\"meta\":{\"test\":{\"value\":\"foo\",\"timestamp\":1}}}",
+                        "\"meta\":{\"id\":{\"value\":\"foo\",\"timestamp\":1}}}",
                 json);
     }
 
@@ -105,7 +105,7 @@ public class TestExtractionTask {
         final ExtractionTask task = ExtractionTask.Builder
                 .withRequest(REQUEST)
                 .setCanonizedURI(EXAMPLE_COM_2)
-                .putMeta("test", MetaData.Builder.withValue("foo").setTimestamp(1).instance())
+                .putMeta(MetaData.Fields.ID, MetaData.Builder.withValue("foo").setTimestamp(1).instance())
                 .addError("error1")
                 .addError("error2")
                 .addError("error2")
@@ -121,7 +121,7 @@ public class TestExtractionTask {
                 "{\"request\":" +
                         "{\"uri\":\"https://www.example.com\"}," +
                         "\"canonized-uri\":\"https://www.example.com/2\"," +
-                        "\"meta\":{\"test\":{\"value\":\"foo\",\"timestamp\":1}}," +
+                        "\"meta\":{\"id\":{\"value\":\"foo\",\"timestamp\":1}}," +
                         "\"errors\":[\"error1\",\"error2\",\"error2\"]}",
                 json);
 
@@ -132,7 +132,7 @@ public class TestExtractionTask {
         assertNotNull(task2);
         assertEquals(REQUEST.getURI(), task2.getRequest().getURI());
         assertEquals(EXAMPLE_COM_2, task2.getCanonizedURI());
-        assertEquals("foo", task2.getMeta().get("test").getValue());
+        assertEquals("foo", task2.getMeta().get(MetaData.Fields.ID).getValue());
         assertEquals(List.of("error1", "error2", "error2"), task2.getErrors());
 
         // request only
@@ -161,7 +161,7 @@ public class TestExtractionTask {
         final ExtractionTask task1 = ExtractionTask.Builder
                 .withRequest(REQUEST)
                 .setCanonizedURI(EXAMPLE_COM_2)
-                .putMeta("test", MetaData.Builder.withValue("foo").setTimestamp(1).instance())
+                .putMeta(MetaData.Fields.ID, MetaData.Builder.withValue("foo").setTimestamp(1).instance())
                 .addError("error2")
                 .addError("error1")
                 .instance();
