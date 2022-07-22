@@ -30,7 +30,7 @@ public class ExtractionTask {
 
         private final ExtractionRequest request;
         private URI canonizedURI = null;
-        private Map<String, MetaData> meta = null;
+        private Map<MetaData.Fields, MetaData> meta = null;
         private List<String> errors = null;
 
         public Builder(ExtractionRequest request) {
@@ -42,7 +42,7 @@ public class ExtractionTask {
             return this;
         }
 
-        public Builder putMeta(String key, MetaData data) {
+        public Builder putMeta(MetaData.Fields key, MetaData data) {
             if (this.meta == null)
                 this.meta = new HashMap<>();
             this.meta.put(key, data);
@@ -71,14 +71,14 @@ public class ExtractionTask {
     private final URI canonizedURI;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private final Map<String, MetaData> meta;
+    private final Map<MetaData.Fields, MetaData> meta;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final List<String> errors;
 
     ExtractionTask(@JsonProperty(value = "request", required = true) ExtractionRequest request,
                    @JsonProperty("canonized-uri") URI canonizedURI,
-                   @JsonProperty("meta") Map<String, MetaData> meta,
+                   @JsonProperty("meta") Map<MetaData.Fields, MetaData> meta,
                    @JsonProperty("errors") List<String> errors) {
         if (request == null)
             throw new IllegalArgumentException("Request must not be null!");
@@ -97,7 +97,7 @@ public class ExtractionTask {
         return canonizedURI;
     }
 
-    public Map<String, MetaData> getMeta() {
+    public Map<MetaData.Fields, MetaData> getMeta() {
         return meta == null ? Collections.emptyMap() : Collections.unmodifiableMap(meta);
     }
 
