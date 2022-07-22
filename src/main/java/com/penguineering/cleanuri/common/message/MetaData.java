@@ -2,12 +2,17 @@ package com.penguineering.cleanuri.common.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.context.annotation.Bean;
-import io.micronaut.core.annotation.Internal;
 
 import java.time.Clock;
 
 @Bean
 public class MetaData {
+    public enum Fields {
+        @JsonProperty("id") ID,
+        @JsonProperty("title") TITLE
+
+    }
+
     public static class Builder {
         public static Builder withValue(String value) {
             return new Builder(value);
@@ -34,7 +39,6 @@ public class MetaData {
     private final String value;
     private final long timestamp;
 
-    @Internal
     MetaData(@JsonProperty(value = "value", required = true) String value,
               @JsonProperty(value = "timestamp", required = true) long timestamp) {
         if (value == null || value.isBlank())
