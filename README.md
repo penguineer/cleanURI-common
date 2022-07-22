@@ -2,6 +2,32 @@
 
 > Common definitions and functions for the cleanURI service.
 
+## Include library
+
+The library can be included with [jitpack](https://jitpack.io/) with two additions to the project's POM file. 
+
+Adding the jitpack repository:
+```xml
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+```
+
+Adding the library:
+```xml
+<dependency>
+  <groupId>com.github.penguineer</groupId>
+  <artifactId>cleanURI-common</artifactId>
+  <version>main-HEAD</version>
+</dependency>
+```
+Replace the `version` tag with the desired release.
+
+Please refer to the [jitpack documentation](https://jitpack.io/) on using alternative build systems.
+
 
 ## Deployment
 
