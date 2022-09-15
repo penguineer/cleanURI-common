@@ -2,10 +2,13 @@ package com.penguineering.cleanuri.common.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,9 +61,12 @@ public class TestExtractionTask {
 
     @Test
     public void testMeta() {
+        final String ts = "2022-09-15T13:17:09.840Z";
+        final Instant timestamp = Instant.from(DateTimeFormatter.ISO_INSTANT.parse(ts));
+
         final ExtractionTask task = ExtractionTask.Builder
                 .withRequest(REQUEST)
-                .putMeta(MetaData.Fields.ID, MetaData.Builder.withValue("foo").setTimestamp(1).instance())
+                .putMeta(MetaData.Fields.ID, MetaData.Builder.withValue("foo").setTimestamp(timestamp).instance())
                 .instance();
 
         assertNotNull(task);
@@ -69,12 +75,14 @@ public class TestExtractionTask {
         assertEquals("foo", task.getMeta().get(MetaData.Fields.ID).getValue());
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         String json = assertDoesNotThrow(
                 () -> mapper.writeValueAsString(task)
         );
         assertEquals(
-                "{\"request\":{\"uri\":\"https://www.example.com\"}," +
-                        "\"meta\":{\"id\":{\"value\":\"foo\",\"timestamp\":1}}}",
+                String.format("{\"request\":{\"uri\":\"https://www.example.com\"}," +
+                        "\"meta\":{\"id\":{\"value\":\"foo\",\"timestamp\":\"%s\"}}}", ts),
                 json);
     }
 
@@ -102,10 +110,13 @@ public class TestExtractionTask {
 
     @Test
     public void testJson() {
+        final String ts = "2022-09-15T13:17:09.840Z";
+        final Instant timestamp = Instant.from(DateTimeFormatter.ISO_INSTANT.parse(ts));
+
         final ExtractionTask task = ExtractionTask.Builder
                 .withRequest(REQUEST)
                 .setCanonizedURI(EXAMPLE_COM_2)
-                .putMeta(MetaData.Fields.ID, MetaData.Builder.withValue("foo").setTimestamp(1).instance())
+                .putMeta(MetaData.Fields.ID, MetaData.Builder.withValue("foo").setTimestamp(timestamp).instance())
                 .addError("error1")
                 .addError("error2")
                 .addError("error2")
@@ -113,16 +124,18 @@ public class TestExtractionTask {
         // "error2" duplicated on purpose: this must be an (ordered) list!
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         String json = assertDoesNotThrow(
                 () -> mapper.writeValueAsString(task)
         );
 
         assertEquals(
-                "{\"request\":" +
+                String.format("{\"request\":" +
                         "{\"uri\":\"https://www.example.com\"}," +
                         "\"canonized-uri\":\"https://www.example.com/2\"," +
-                        "\"meta\":{\"id\":{\"value\":\"foo\",\"timestamp\":1}}," +
-                        "\"errors\":[\"error1\",\"error2\",\"error2\"]}",
+                        "\"meta\":{\"id\":{\"value\":\"foo\",\"timestamp\":\"%s\"}}," +
+                        "\"errors\":[\"error1\",\"error2\",\"error2\"]}", ts),
                 json);
 
         // full object
@@ -157,11 +170,14 @@ public class TestExtractionTask {
 
     @Test
     public void testCopy() {
+        final String ts = "2022-09-15T13:17:09.840Z";
+        final Instant timestamp = Instant.from(DateTimeFormatter.ISO_INSTANT.parse(ts));
+
         // test if copied task yields the same JSON
         final ExtractionTask task1 = ExtractionTask.Builder
                 .withRequest(REQUEST)
                 .setCanonizedURI(EXAMPLE_COM_2)
-                .putMeta(MetaData.Fields.ID, MetaData.Builder.withValue("foo").setTimestamp(1).instance())
+                .putMeta(MetaData.Fields.ID, MetaData.Builder.withValue("foo").setTimestamp(timestamp).instance())
                 .addError("error2")
                 .addError("error1")
                 .instance();
@@ -169,6 +185,8 @@ public class TestExtractionTask {
         assertNotNull(task2);
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         String json1 = assertDoesNotThrow(
                 () -> mapper.writeValueAsString(task1)
         );
