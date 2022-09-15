@@ -3,10 +3,12 @@ package com.penguineering.cleanuri.common.message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,19 +74,21 @@ public class TestExtractionRequest {
 
         final ExtractionRequest.Builder builder = ExtractionRequest.Builder.withURI(EXAMPLE_COM);
 
-        builder.setAgeLimit(1);
+        builder.setAgeLimit(Duration.ofMillis(1));
         ExtractionRequest request = builder.instance();
         assertNotNull(request);
-        assertEquals(1, request.getAgeLimit());
+        assertEquals(Duration.ofMillis(1), request.getAgeLimit());
 
         // builder should have reset
         assertNull(builder.instance().getAgeLimit());
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         String json = assertDoesNotThrow(
                 () -> mapper.writeValueAsString(request)
         );
-        assertEquals("{\"uri\":\"https://www.example.com\",\"age-limit\":1}", json);
+        assertEquals("{\"uri\":\"https://www.example.com\",\"age-limit\":\"PT0.001S\"}", json);
     }
 
     @Test
@@ -92,13 +96,15 @@ public class TestExtractionRequest {
         final ExtractionRequest req1 = ExtractionRequest.Builder
                 .withURI(EXAMPLE_COM)
                 .addField(MetaData.Fields.ID)
-                .setAgeLimit(2).instance();
+                .setAgeLimit(Duration.ofMillis(2)).instance();
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         final String json = assertDoesNotThrow(
                 () -> mapper.writeValueAsString(req1)
         );
-        assertEquals("{\"uri\":\"https://www.example.com\",\"fields\":[\"id\"],\"age-limit\":2}", json);
+        assertEquals("{\"uri\":\"https://www.example.com\",\"fields\":[\"id\"],\"age-limit\":\"PT0.002S\"}", json);
 
         final ExtractionRequest req2 = assertDoesNotThrow(
                 () -> mapper.readValue(json, ExtractionRequest.class)
@@ -106,17 +112,17 @@ public class TestExtractionRequest {
         assertNotNull(req2);
         assertEquals(EXAMPLE_COM, req2.getURI());
         assertEquals(Set.of(MetaData.Fields.ID), req2.getFields());
-        assertEquals(2, req2.getAgeLimit());
+        assertEquals(Duration.ofMillis(2), req2.getAgeLimit());
 
         final ExtractionRequest req3 = assertDoesNotThrow(
                 () -> mapper.readValue(
-                        "{\"uri\":\"https://www.example.com\",\"age-limit\":2}",
+                        "{\"uri\":\"https://www.example.com\",\"age-limit\":\"PT0.002S\"}",
                         ExtractionRequest.class)
         );
         assertNotNull(req3);
         assertEquals(EXAMPLE_COM, req3.getURI());
         assertTrue(req3.getFields().isEmpty());
-        assertEquals(2, req3.getAgeLimit());
+        assertEquals(Duration.ofMillis(2), req3.getAgeLimit());
 
         final ExtractionRequest req4 = assertDoesNotThrow(
                 () -> mapper.readValue(
@@ -131,10 +137,11 @@ public class TestExtractionRequest {
 
     @Test
     public void testMissingJson() {
-        final String json_no_uri = "{\"fields\":[\"id\"],\"age-limit\":2}";
-        final String json_empty_uri = "{\"uri\":\"\",\"fields\":[\"id\"],\"age-limit\":2}";
+        final String json_no_uri = "{\"fields\":[\"id\"],\"age-limit\":\"PT0.002S\"}";
+        final String json_empty_uri = "{\"uri\":\"\",\"fields\":[\"id\"],\"age-limit\":\"PT0.002S\"}";
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
 
         assertThrows(
                 MismatchedInputException.class,
