@@ -1,6 +1,6 @@
 # cleanURI - Common
 
-> Common definitions and functions for the cleanURI service.
+> Common definitions and functions for the [cleanURI](https://github.com/penguineer/cleanURI) service.
 
 
 ## Deployment
