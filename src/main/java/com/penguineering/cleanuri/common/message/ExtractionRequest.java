@@ -1,10 +1,12 @@
 package com.penguineering.cleanuri.common.message;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.context.annotation.Bean;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +20,7 @@ public class ExtractionRequest {
 
         private final URI uri;
         private Set<MetaData.Fields> fields = null;
-        private Long ageLimit = null;
+        private Duration ageLimit = null;
 
         Builder(URI uri) {
             this.uri = uri;
@@ -31,7 +33,7 @@ public class ExtractionRequest {
             return this;
         }
 
-        public Builder setAgeLimit(long ageLimit) {
+        public Builder setAgeLimit(Duration ageLimit) {
             this.ageLimit = ageLimit;
             return this;
         }
@@ -51,11 +53,12 @@ public class ExtractionRequest {
 
     @JsonProperty("age-limit")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private final Long ageLimit;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private final Duration ageLimit;
 
     ExtractionRequest(@JsonProperty(value = "uri", required = true) URI uri,
                       @JsonProperty("fields") Set<MetaData.Fields> fields,
-                      @JsonProperty("age-limit") Long ageLimit) {
+                      @JsonProperty("age-limit") Duration ageLimit) {
         if (uri == null || uri.toString().isBlank())
             throw new IllegalArgumentException("URI must not be null or blank!");
         this.uri = uri;
@@ -71,7 +74,7 @@ public class ExtractionRequest {
         return fields == null ? Collections.emptySet() : Collections.unmodifiableSet(fields);
     }
 
-    public Long getAgeLimit() {
+    public Duration getAgeLimit() {
         return ageLimit;
     }
 }
