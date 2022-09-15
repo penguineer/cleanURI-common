@@ -2,8 +2,12 @@ package com.penguineering.cleanuri.common.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,9 +33,11 @@ public class TestMetaData {
 
         assertNotNull(data);
         assertEquals(value, data.getValue());
-        assertTrue(data.getTimestamp() > 0);
+        //assertTrue(data.getTimestamp() > 0);
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         String json = assertDoesNotThrow(
                 () -> mapper.writeValueAsString(data)
         );
@@ -42,7 +48,8 @@ public class TestMetaData {
     @Test
     public void testComplete() {
         final String value = "foo";
-        final long timestamp = 1658509802251L;
+        final String ts = "2022-09-15T13:17:09.840Z";
+        final Instant timestamp = Instant.from(DateTimeFormatter.ISO_INSTANT.parse(ts));
         final MetaData data = MetaData.Builder.withValue(value).setTimestamp(timestamp).instance();
 
         assertNotNull(data);
@@ -50,30 +57,37 @@ public class TestMetaData {
         assertEquals(timestamp, data.getTimestamp());
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
         String json = assertDoesNotThrow(
                 () -> mapper.writeValueAsString(data)
         );
-        assertEquals("{\"value\":\"foo\",\"timestamp\":1658509802251}", json);
+        assertEquals(String.format("{\"value\":\"foo\",\"timestamp\":\"%s\"}", ts), json);
     }
 
     @Test
     public void testFromCompleteJson() {
-        final String json = "{\"value\":\"foo\",\"timestamp\":1658509802251}";
+        final String ts = "2022-05-13T23:04:00.100Z";
+        final String json = String.format("{\"value\":\"foo\",\"timestamp\":\"%s\"}", ts);
+
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
 
         final MetaData data = assertDoesNotThrow(
                 () -> mapper.readValue(json, MetaData.class)
         );
         assertNotNull(data);
         assertEquals("foo", data.getValue());
-        assertEquals(1658509802251L, data.getTimestamp());
+        assertEquals(ts, data.getTimestamp().toString());
     }
 
     @Test
     public void testIncompleteJson() {
         final String json_no_value = "{\"timestamp\":1658509802251}";
         final String json_no_timestamp = "{\"value\":\"foo\"}";
+
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
 
         assertThrows(
                 MismatchedInputException.class,
