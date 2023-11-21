@@ -30,6 +30,10 @@
 
   <repositories>
     <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+    <repository>
       <id>central</id>
       <url>https://repo.maven.apache.org/maven2</url>
     </repository>
@@ -44,6 +48,12 @@
   </distributionManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>com.github.penguineer</groupId>
+      <artifactId>cleanURI-site</artifactId>
+      <version>0.1.0</version>
+    </dependency>
+
     <dependency>
       <groupId>io.micronaut</groupId>
       <artifactId>micronaut-inject</artifactId>
