@@ -3,11 +3,13 @@ package com.penguineering.cleanuri.common.message;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.context.annotation.Bean;
+import io.micronaut.serde.annotation.Serdeable;
 
 import java.net.URI;
 import java.util.*;
 
 @Bean
+@Serdeable
 public class ExtractionTask {
     public static class Builder {
         public static Builder withRequest(ExtractionRequest request) {
@@ -66,7 +68,6 @@ public class ExtractionTask {
 
     private final ExtractionRequest request;
 
-    @JsonProperty("canonized-uri")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final URI canonizedURI;
 
@@ -89,18 +90,22 @@ public class ExtractionTask {
         this.errors = errors;
     }
 
+    @JsonProperty("request")
     public ExtractionRequest getRequest() {
         return request;
     }
 
+    @JsonProperty("canonized-uri")
     public URI getCanonizedURI() {
         return canonizedURI;
     }
 
+    @JsonProperty("meta")
     public Map<MetaData.Fields, MetaData> getMeta() {
         return meta == null ? Collections.emptyMap() : Collections.unmodifiableMap(meta);
     }
 
+    @JsonProperty("errors")
     public List<String> getErrors() {
         return errors == null ? Collections.emptyList() : Collections.unmodifiableList(errors);
     }

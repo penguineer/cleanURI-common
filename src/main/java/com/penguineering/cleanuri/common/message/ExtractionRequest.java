@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.context.annotation.Bean;
+import io.micronaut.serde.annotation.Serdeable;
 
 import java.net.URI;
 import java.time.Duration;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Bean
+@Serdeable
 public class ExtractionRequest {
     public static class Builder {
         public static Builder withURI(URI uri) {
@@ -46,12 +48,10 @@ public class ExtractionRequest {
         }
     }
 
-    @JsonProperty("uri")
     private final URI uri;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final Set<MetaData.Fields> fields;
 
-    @JsonProperty("age-limit")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private final Duration ageLimit;
@@ -66,14 +66,17 @@ public class ExtractionRequest {
         this.ageLimit = ageLimit;
     }
 
+    @JsonProperty("uri")
     public URI getURI() {
         return uri;
     }
 
+    @JsonProperty("fields")
     public Set<MetaData.Fields> getFields() {
         return fields == null ? Collections.emptySet() : Collections.unmodifiableSet(fields);
     }
 
+    @JsonProperty("age-limit")
     public Duration getAgeLimit() {
         return ageLimit;
     }

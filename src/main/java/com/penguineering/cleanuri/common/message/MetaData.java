@@ -3,10 +3,12 @@ package com.penguineering.cleanuri.common.message;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.context.annotation.Bean;
+import io.micronaut.serde.annotation.Serdeable;
 
 import java.time.Instant;
 
 @Bean
+@Serdeable
 public class MetaData {
     public enum Fields {
         @JsonProperty("id") ID,
@@ -49,10 +51,12 @@ public class MetaData {
         this.timestamp = timestamp;
     }
 
+    @JsonProperty("value")
     public String getValue() {
         return value;
     }
 
+    @JsonProperty("timestamp")
     public Instant getTimestamp() {
         return timestamp;
     }
