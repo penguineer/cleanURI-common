@@ -38,7 +38,7 @@ public class MetaData {
 
 
     private final String value;
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private final Instant timestamp;
 
     MetaData(@JsonProperty(value = "value", required = true) String value,
