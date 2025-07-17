@@ -73,8 +73,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.micronaut.serde</groupId>
-      <artifactId>micronaut-serde-jackson</artifactId>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-jackson-databind</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -102,10 +102,10 @@
 
   <build>
     <plugins>
-      <!--plugin>
+      <plugin>
         <groupId>io.micronaut.build</groupId>
         <artifactId>micronaut-maven-plugin</artifactId>
-      </plugin-->
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -118,7 +118,7 @@
             <path>
               <groupId>io.micronaut</groupId>
               <artifactId>micronaut-inject-java</artifactId>
-              <version>${micronaut.version}</version>
+              <version>${micronaut.core.version}</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs>

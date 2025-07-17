@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.context.annotation.Bean;
-import io.micronaut.serde.annotation.Serdeable;
 
 import java.net.URI;
 import java.time.Duration;
@@ -13,7 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Bean
-@Serdeable
 public class ExtractionRequest {
     public static class Builder {
         public static Builder withURI(URI uri) {
