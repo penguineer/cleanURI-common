@@ -2,14 +2,10 @@ package com.penguineering.cleanuri.common.message;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.context.annotation.Bean;
-import io.micronaut.serde.annotation.Serdeable;
 
 import java.net.URI;
 import java.util.*;
 
-@Bean
-@Serdeable
 public class ExtractionTask {
     public static class Builder {
         public static Builder withRequest(ExtractionRequest request) {
