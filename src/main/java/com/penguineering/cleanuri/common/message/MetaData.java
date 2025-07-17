@@ -2,9 +2,11 @@ package com.penguineering.cleanuri.common.message;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.context.annotation.Bean;
 
 import java.time.Instant;
 
+@Bean
 public class MetaData {
     public enum Fields {
         @JsonProperty("id") ID,

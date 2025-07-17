@@ -3,6 +3,7 @@ package com.penguineering.cleanuri.common.message;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.context.annotation.Bean;
 
 import java.net.URI;
 import java.time.Duration;
@@ -10,6 +11,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+@Bean
 public class ExtractionRequest {
     public static class Builder {
         public static Builder withURI(URI uri) {
